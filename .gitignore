@@ -36,4 +36,4 @@ debug.log
 # Arquivos do sistema
 .DS_Store
 Thumbs.db
-backend/db.js
+
