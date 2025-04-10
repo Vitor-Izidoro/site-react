@@ -7,7 +7,7 @@ function App() {
   const [itemClicked, setItemClicked] = useState(null);
 
   function clicked(item) {
-    console.log("Clicou no item", item.id);
+    console.log("Clicou no ponto turístico:", item.id);
     setModalIsOpen(true);
     setItemClicked(item);
   }
@@ -18,16 +18,18 @@ function App() {
   }
 
   return (
-    <div class="body1">
+    <div className="body1">
       <DataList clicked={clicked} />
-      
+
       {modalIsOpen && itemClicked && (
         <div className="modal">
           <div className="modal-content">
-            <h1>Detalhes do Usuário</h1>
-            <p><strong>Nome:</strong> {itemClicked.nome}</p>
-            <p><strong>Email:</strong> {itemClicked.email}</p>
-            <p><strong>Telefone:</strong> {itemClicked.telefone}</p>
+            <h1>Detalhes do Ponto Turístico</h1>
+            <p><strong>Ponto:</strong> {itemClicked.ponto}</p>
+            <p><strong>História:</strong> {itemClicked.historia}</p>
+            <p><strong>Visitantes por dia:</strong> {itemClicked.visitantes}</p>
+            <p><strong>Cidade:</strong> {itemClicked.cidade}</p>
+            <p><strong>Tipo:</strong> {itemClicked.tipo}</p>
             <button onClick={closeModal}>Fechar</button>
           </div>
         </div>
