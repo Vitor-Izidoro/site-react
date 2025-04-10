@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AddUser from "./AddUser";
+import AddPoint from "./AddPoint";
 
 const AdminPage = () => {
     const [data, setData] = useState([]);
-    const [editingUser, setEditingUser] = useState(null);
+    const [editingPoint, setEditingPoint] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -22,7 +22,7 @@ const AdminPage = () => {
 
             if (!response.ok) throw new Error("Erro ao excluir ponto turístico");
 
-            setData(prevData => prevData.filter(user => user.id !== id));
+            setData(prevData => prevData.filter(point => point.id !== id));
         } catch (error) {
             console.error("Erro ao excluir ponto turístico:", error.message);
         }
@@ -39,18 +39,18 @@ const AdminPage = () => {
             if (!response.ok) throw new Error("Erro ao atualizar ponto turístico");
 
             setData(prevData =>
-                prevData.map(user =>
-                    user.id === id ? { ...user, ponto, historia, visitantes, cidade, tipo } : user
+                prevData.map(point =>
+                    point.id === id ? { ...point, ponto, historia, visitantes, cidade, tipo } : point
                 )
             );
 
-            setEditingUser(null);
+            setEditingPoint(null);
         } catch (error) {
             console.error("Erro ao atualizar ponto turístico:", error.message);
         }
     };
 
-    const handleAddUser = (novoPonto) => {
+    const handleAddPoint = (novoPonto) => {
         setData(prevData => [...prevData, novoPonto]);
     };
 
@@ -60,12 +60,12 @@ const AdminPage = () => {
             <button onClick={() => navigate("/")}>Voltar para Página Inicial</button>
 
             {/* Componente de adicionar novo ponto turístico */}
-            <AddUser onAddUser={handleAddUser} />
+            <AddPoint onAddPoint={handleAddPoint} />
 
             <ul className="list">
                 {data.map((item) => (
                     <li key={item.id} className="li-list">
-                        {editingUser === item.id ? (
+                        {editingPoint === item.id ? (
                             <form onSubmit={(e) => {
                                 e.preventDefault();
                                 const ponto = e.target.ponto.value;
@@ -81,7 +81,7 @@ const AdminPage = () => {
                                 <input type="text" name="cidade" defaultValue={item.cidade} required />
                                 <input type="text" name="tipo" defaultValue={item.tipo} required />
                                 <button type="submit">Salvar</button>
-                                <button type="button" onClick={() => setEditingUser(null)}>Cancelar</button>
+                                <button type="button" onClick={() => setEditingPoint(null)}>Cancelar</button>
                             </form>
                         ) : (
                             <div>
@@ -89,7 +89,7 @@ const AdminPage = () => {
                                 <p><strong>Tipo:</strong> {item.tipo}</p>
                                 <p><strong>Cidade:</strong> {item.cidade}</p>
                                 <p><strong>Visitantes/dia:</strong> {item.visitantes}</p>
-                                <button onClick={() => setEditingUser(item.id)}>Editar</button>
+                                <button onClick={() => setEditingPoint(item.id)}>Editar</button>
                                 <button onClick={() => handleDelete(item.id)}>Excluir</button>
                             </div>
                         )}

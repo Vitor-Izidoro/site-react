@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const AddUser = ({ onAddUser }) => {
+const AddPoint = ({ onAddPoint }) => {
     const [ponto, setPonto] = useState("");
     const [historia, setHistoria] = useState("");
     const [visitantes, setVisitantes] = useState("");
@@ -25,7 +25,7 @@ const AddUser = ({ onAddUser }) => {
             console.log("Ponto turístico adicionado com sucesso:", data);
 
             // ✅ Chama a função para atualizar o estado no AdminPage
-            onAddUser(data);
+            onAddPoint(data);
 
             // Limpa os campos após adicionar
             setPonto("");
@@ -54,4 +54,4 @@ const AddUser = ({ onAddUser }) => {
     );
 };
 
-export default AddUser;
+export default AddPoint;
