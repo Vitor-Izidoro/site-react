@@ -10,21 +10,32 @@ export const getPoints = ( _, res) => {
 }
 export const addPoint = (req, res) => {
     const { ponto, historia, visitantes, cidade, tipo } = req.body;
-    
+
     if (!ponto || !historia || !visitantes || !cidade || !tipo) {
         return res.status(400).json({ error: "Todos os campos são obrigatórios!" });
     }
 
     const q = "INSERT INTO turismo (ponto, historia, visitantes, cidade, tipo) VALUES (?, ?, ?, ?, ?)";
-    
+
     db.query(q, [ponto, historia, visitantes, cidade, tipo], (err, result) => {
         if (err) {
-            console.error("Erro ao adicionar ponto turistico: ", err); // Mostra o erro no console
+            console.error("Erro ao adicionar ponto turistico: ", err);
             return res.status(500).json({ error: "Erro ao adicionar ponto turistico" });
         }
-        return res.status(201).json({ message: "ponto turistico adicionado com sucesso!" });
+
+        const novoPonto = {
+            id: result.insertId, // importante!
+            ponto,
+            historia,
+            visitantes,
+            cidade,
+            tipo
+        };
+
+        return res.status(201).json(novoPonto); // retorna o ponto completo
     });
 };
+
 
 
 export const deletePoint = (req, res) => {

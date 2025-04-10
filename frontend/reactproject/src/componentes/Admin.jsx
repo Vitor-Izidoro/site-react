@@ -50,15 +50,17 @@ const AdminPage = () => {
         }
     };
 
+    const handleAddUser = (novoPonto) => {
+        setData(prevData => [...prevData, novoPonto]);
+    };
+
     return (
         <div className="mainContainer">
             <h1 className="title">Administração de Pontos Turísticos</h1>
-
-            {/* Botão para voltar à página principal */}
             <button onClick={() => navigate("/")}>Voltar para Página Inicial</button>
 
             {/* Componente de adicionar novo ponto turístico */}
-            <AddUser />
+            <AddUser onAddUser={handleAddUser} />
 
             <ul className="list">
                 {data.map((item) => (
