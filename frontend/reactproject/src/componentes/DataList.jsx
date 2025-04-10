@@ -30,16 +30,16 @@ const DataList = ({ clicked }) => {
             if (!response.ok) throw new Error("Erro ao excluir usuário");
 
             console.log(`Usuário com ID ${id} excluído com sucesso!`);
-            setData(prevData => prevData.filter(user => user.idusuario !== id));
+            setData(prevData => prevData.filter(user => user.id !== id));
         } catch (error) {
             console.error("Erro ao excluir usuário:", error.message);
         }
     };
 
-    const handleUpdate = async (id, nome, telefone, email) => {
+    const handleUpdate = async (id, ponto, historia, visitantes, cidade, tipo) => {
         console.log(`Atualizando usuário com ID: ${id}`);
 
-        if (!id || !nome || !telefone || !email) {
+        if (!id || !ponto || !historia || !visitantes) {
             console.error("Todos os campos são obrigatórios.");
             return;
         }
@@ -48,7 +48,7 @@ const DataList = ({ clicked }) => {
             const response = await fetch(`http://localhost:8800/users/update/${id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ nome, telefone, email })
+                body: JSON.stringify({ ponto, historia, visitantes })
             });
 
             if (!response.ok) throw new Error("Erro ao atualizar usuário");
@@ -58,7 +58,7 @@ const DataList = ({ clicked }) => {
             // Atualiza a lista sem precisar recarregar a página
             setData(prevData =>
                 prevData.map(user =>
-                    user.idusuario === id ? { ...user, nome, telefone, email } : user
+                    user.id === id ? { ...user, ponto, historia, visitantes } : user
                 )
             );
 
@@ -77,29 +77,29 @@ const DataList = ({ clicked }) => {
 
             <ul className="list">
                 {data.map((item) => (
-                    <li key={item.idusuario} className="li-list">
-                        {editingUser === item.idusuario ? (
+                    <li key={item.id} className="li-list">
+                        {editingUser === item.id ? (
                             <form onSubmit={(e) => {
                                 e.preventDefault();
-                                const nome = e.target.nome.value;
-                                const telefone = e.target.telefone.value;
-                                const email = e.target.email.value;
-                                handleUpdate(item.idusuario, nome, telefone, email);
+                                const ponto = e.target.ponto.value;
+                                const historia = e.target.historia.value;
+                                const visitantes = e.target.visitantes.value;
+                                handleUpdate(item.id, ponto, historia, visitantes);
                             }}>
-                                <input type="text" name="nome" defaultValue={item.nome} required />
-                                <input type="text" name="telefone" defaultValue={item.telefone} required />
-                                <input type="email" name="email" defaultValue={item.email} required />
+                                <input type="text" name="ponto" defaultValue={item.ponto} required />
+                                <input type="text" name="historia" defaultValue={item.historia} required />
+                                <input type="visitantes" name="visitantes" defaultValue={item.visitantes} required />
                                 <button type="submit">Salvar</button>
                                 <button type="button" onClick={() => setEditingUser(null)}>Cancelar</button>
                             </form>
                         ) : (
                             <div>
-                                <p><strong>Nome:</strong> {item.nome}</p>
-                                <p><strong>Telefone:</strong> {item.telefone}</p>
-                                <p><strong>Email:</strong> {item.email}</p>
+                                <p><strong>Ponto turistico :</strong> {item.ponto}</p>
+                                <p><strong>Tipo :</strong> {item.tipo}</p>
+                                <p><strong>Media de visitantes por dia :</strong> {item.visitantes}</p>
                                 <button className="btn-list" onClick={() => clicked(item)}>Mais detalhes</button>
-                                <button onClick={() => handleDelete(item.idusuario)}>Excluir</button>
-                                <button onClick={() => setEditingUser(item.idusuario)}>Editar</button>
+                                <button onClick={() => handleDelete(item.id)}>Excluir</button>
+                                <button onClick={() => setEditingUser(item.id)}>Editar</button>
                             </div>
                         )}
                     </li>
