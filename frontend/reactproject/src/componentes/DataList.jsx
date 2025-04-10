@@ -1,78 +1,58 @@
 import React, { useEffect, useState } from "react";
-import AddUser from "./AddUser";  // Certifique-se de importar corretamente
+import { useNavigate } from "react-router-dom";
+import AddUser from "./AddUser";
 
-const DataList = ({ clicked }) => {
+const DataList = () => {
     const [data, setData] = useState([]);
     const [editingUser, setEditingUser] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        fetch("http://localhost:8800/users")
+        fetch("http://localhost:8800/") // CORRIGIDO
             .then(res => res.json())
-            .then(data => {
-                console.log("Usuários carregados:", data);
-                setData(data);
-            })
-            .catch(error => console.error("Erro ao carregar usuários:", error));
+            .then(data => setData(data))
+            .catch(error => console.error("Erro ao carregar pontos turísticos:", error));
     }, []);
 
     const handleDelete = async (id) => {
-        console.log("Tentando excluir o usuário com ID:", id);
-        if (!id) {
-            console.error("ID do usuário não encontrado.");
-            return;
-        }
-
         try {
-            const response = await fetch(`http://localhost:8800/users/delete/${id}`, {
+            const response = await fetch(`http://localhost:8800/delete/${id}`, { // CORRIGIDO
                 method: "DELETE",
             });
 
-            if (!response.ok) throw new Error("Erro ao excluir usuário");
+            if (!response.ok) throw new Error("Erro ao excluir ponto turístico");
 
-            console.log(`Usuário com ID ${id} excluído com sucesso!`);
             setData(prevData => prevData.filter(user => user.id !== id));
         } catch (error) {
-            console.error("Erro ao excluir usuário:", error.message);
+            console.error("Erro ao excluir ponto turístico:", error.message);
         }
     };
 
     const handleUpdate = async (id, ponto, historia, visitantes, cidade, tipo) => {
-        console.log(`Atualizando usuário com ID: ${id}`);
-
-        if (!id || !ponto || !historia || !visitantes) {
-            console.error("Todos os campos são obrigatórios.");
-            return;
-        }
-
         try {
-            const response = await fetch(`http://localhost:8800/users/update/${id}`, {
+            const response = await fetch(`http://localhost:8800/update/${id}`, { // CORRIGIDO
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ ponto, historia, visitantes })
+                body: JSON.stringify({ ponto, historia, visitantes, cidade, tipo }) // COMPLETO
             });
 
-            if (!response.ok) throw new Error("Erro ao atualizar usuário");
+            if (!response.ok) throw new Error("Erro ao atualizar ponto turístico");
 
-            console.log(`Usuário com ID ${id} atualizado com sucesso!`);
-
-            // Atualiza a lista sem precisar recarregar a página
             setData(prevData =>
                 prevData.map(user =>
-                    user.id === id ? { ...user, ponto, historia, visitantes } : user
+                    user.id === id ? { ...user, ponto, historia, visitantes, cidade, tipo } : user
                 )
             );
 
             setEditingUser(null);
         } catch (error) {
-            console.error("Erro ao atualizar usuário:", error.message);
+            console.error("Erro ao atualizar ponto turístico:", error.message);
         }
     };
 
     return (
         <div className="mainContainer">
-            <h1 className="title">Listando Usuários</h1>
-
-            {/* Adicionando a funcionalidade de adicionar usuário na tela */}
+            <h1 className="title">Pontos Turísticos</h1>
             <AddUser />
 
             <ul className="list">
@@ -84,20 +64,28 @@ const DataList = ({ clicked }) => {
                                 const ponto = e.target.ponto.value;
                                 const historia = e.target.historia.value;
                                 const visitantes = e.target.visitantes.value;
-                                handleUpdate(item.id, ponto, historia, visitantes);
+                                const cidade = e.target.cidade.value;
+                                const tipo = e.target.tipo.value;
+                                handleUpdate(item.id, ponto, historia, visitantes, cidade, tipo);
                             }}>
                                 <input type="text" name="ponto" defaultValue={item.ponto} required />
                                 <input type="text" name="historia" defaultValue={item.historia} required />
-                                <input type="visitantes" name="visitantes" defaultValue={item.visitantes} required />
+                                <input type="number" name="visitantes" defaultValue={item.visitantes} required />
+                                <input type="text" name="cidade" defaultValue={item.cidade} required />
+                                <input type="text" name="tipo" defaultValue={item.tipo} required />
                                 <button type="submit">Salvar</button>
                                 <button type="button" onClick={() => setEditingUser(null)}>Cancelar</button>
                             </form>
                         ) : (
                             <div>
-                                <p><strong>Ponto turistico :</strong> {item.ponto}</p>
-                                <p><strong>Tipo :</strong> {item.tipo}</p>
-                                <p><strong>Media de visitantes por dia :</strong> {item.visitantes}</p>
-                                <button className="btn-list" onClick={() => clicked(item)}>Mais detalhes</button>
+                                <p><strong>Ponto turístico:</strong> {item.ponto}</p>
+                                <p><strong>Tipo:</strong> {item.tipo}</p>
+                                <p><strong>Cidade:</strong> {item.cidade}</p>
+                                <p><strong>Média de visitantes por dia:</strong> {item.visitantes}</p>
+
+                                <button onClick={() => navigate(`/detalhes/${item.id}`)}>
+                                    Mais detalhes
+                                </button>
                                 <button onClick={() => handleDelete(item.id)}>Excluir</button>
                                 <button onClick={() => setEditingUser(item.id)}>Editar</button>
                             </div>

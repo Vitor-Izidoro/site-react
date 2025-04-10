@@ -1,40 +1,21 @@
-import "./App.css"; 
+import "./App.css";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import DataList from "./componentes/DataList";
-import { useState } from "react";
+import Detalhes from "./componentes/Detalhes";
 
 function App() {
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [itemClicked, setItemClicked] = useState(null);
-
-  function clicked(item) {
-    console.log("Clicou no ponto turístico:", item.id);
-    setModalIsOpen(true);
-    setItemClicked(item);
-  }
-
-  function closeModal() {
-    setModalIsOpen(false);
-    setItemClicked(null);
-  }
-
   return (
-    <div className="body1">
-      <DataList clicked={clicked} />
+    <Router>
+      <div className="body1">
+        <Routes>
+          {/* Página principal com a lista de pontos turísticos */}
+          <Route path="/" element={<DataList />} />
 
-      {modalIsOpen && itemClicked && (
-        <div className="modal">
-          <div className="modal-content">
-            <h1>Detalhes do Ponto Turístico</h1>
-            <p><strong>Ponto:</strong> {itemClicked.ponto}</p>
-            <p><strong>História:</strong> {itemClicked.historia}</p>
-            <p><strong>Visitantes por dia:</strong> {itemClicked.visitantes}</p>
-            <p><strong>Cidade:</strong> {itemClicked.cidade}</p>
-            <p><strong>Tipo:</strong> {itemClicked.tipo}</p>
-            <button onClick={closeModal}>Fechar</button>
-          </div>
-        </div>
-      )}
-    </div>
+          {/* Página de detalhes do ponto turístico, baseada no ID */}
+          <Route path="/detalhes/:id" element={<Detalhes />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 

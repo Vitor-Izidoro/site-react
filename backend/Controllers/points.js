@@ -63,3 +63,18 @@ export const updatePoint = (req, res) => {
         return res.status(200).json({ message: "ponto turistico atualizado com sucesso!" });
     });
 };
+export const getPointById = (req, res) => {
+    const { id } = req.params;
+
+    const q = "SELECT * FROM turismo WHERE id = ?";
+    db.query(q, [id], (err, data) => {
+        if (err) {
+            console.error("Erro ao buscar ponto turístico por ID:", err);
+            return res.status(500).json({ error: "Erro ao buscar ponto turístico" });
+        }
+        if (data.length === 0) {
+            return res.status(404).json({ error: "Ponto turístico não encontrado" });
+        }
+        return res.status(200).json(data[0]); // Retorna apenas o objeto, não o array
+    });
+};

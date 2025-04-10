@@ -1,13 +1,18 @@
 import express from "express";
-
-
-import { getPoints, addPoint, deletePoint, updatePoint } from "../Controllers/points.js";
+import { 
+  getPoints, 
+  addPoint, 
+  deletePoint, 
+  updatePoint, 
+  getPointById 
+} from "../Controllers/points.js";
 
 const router = express.Router();
+
 router.get("/", getPoints);
-router.post("/add", addPoint); // Nova rota para adicionar usuários
-router.delete("/delete/:id", deletePoint); // Nova rota para excluir usuário
-router.put("/update/:id", updatePoint); // Rota para atualizar usuário
+router.post("/add", addPoint);
+router.delete("/delete/:id", deletePoint);
+router.put("/update/:id", updatePoint);
+router.get("/:id", getPointById); 
 
 export default router;
-
